@@ -60,9 +60,14 @@ public class AddDoctorDialog extends JDialog {
                 "1234" // Default password
         );
 
-        DoctorDAO.addDoctor(d);
-        success = true;
-        dispose();
+        if (DoctorDAO.addDoctor(d)) {
+            success = true;
+            JOptionPane.showMessageDialog(this, "Doctor added successfully!");
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to add doctor. ID or Email might presumably exist.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public boolean isSuccess() {

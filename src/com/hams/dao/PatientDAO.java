@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PatientDAO {
 
-    public static void addPatient(Patient patient) {
+    public static boolean addPatient(Patient patient) {
         String insertUser = "INSERT INTO users (username, password, role, email) VALUES (?, ?, 'PATIENT', ?)";
         String insertPatient = "INSERT INTO patients (patient_id, name, email) VALUES (?, ?, ?)";
 
@@ -31,6 +31,7 @@ public class PatientDAO {
                 pStmt.executeUpdate();
 
                 conn.commit();
+                return true;
             } catch (SQLException e) {
                 conn.rollback();
                 e.printStackTrace();
@@ -38,6 +39,7 @@ public class PatientDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public static List<Patient> getAllPatients() {
@@ -61,19 +63,52 @@ public class PatientDAO {
         return patients;
     }
 
-    public static void updatePatient(Patient patient) {
-        String sql = "UPDATE patients SET name = ?, email = ? WHERE patient_id = ?";
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    public static boolean updatePatient(Patient patient) {
+        String selectOldEmail = "SELECT email FROM patients WHERE patient_id = ?";
+        String updatePatientSql = "UPDATE patients SET name = ?, email = ? WHERE patient_id = ?";
+        String updateUserSql = "UPDATE users SET username = ?, email = ? WHERE email = ?";
 
-            pstmt.setString(1, patient.getName());
-            pstmt.setString(2, patient.getEmail());
-            pstmt.setString(3, patient.getPatientId());
-            pstmt.executeUpdate();
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false); // Start Transaction
 
+            String oldEmail = null;
+            try (PreparedStatement selStmt = conn.prepareStatement(selectOldEmail)) {
+                selStmt.setString(1, patient.getPatientId());
+                ResultSet rs = selStmt.executeQuery();
+                if (rs.next()) {
+                    oldEmail = rs.getString("email");
+                }
+            }
+
+            if (oldEmail == null) {
+                return false; // Patient not found
+            }
+
+            try (PreparedStatement pStmt = conn.prepareStatement(updatePatientSql);
+                    PreparedStatement uStmt = conn.prepareStatement(updateUserSql)) {
+
+                // Update patients table
+                pStmt.setString(1, patient.getName());
+                pStmt.setString(2, patient.getEmail());
+                pStmt.setString(3, patient.getPatientId());
+                pStmt.executeUpdate();
+
+                // Update users table
+                uStmt.setString(1, patient.getName()); // Sync name to username
+                uStmt.setString(2, patient.getEmail());
+                uStmt.setString(3, oldEmail); // Identify user by old email
+                uStmt.executeUpdate();
+
+                conn.commit();
+                return true;
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public static boolean deletePatient(String patientId) {
@@ -105,6 +140,9 @@ public class PatientDAO {
 
                     conn.commit();
                     return true;
+                } catch (SQLException e) {
+                    conn.rollback();
+                    e.printStackTrace();
                 }
             } else {
                 // Patient not found

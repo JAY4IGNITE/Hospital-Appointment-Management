@@ -90,6 +90,6 @@ public class LoginFrame extends JFrame {
         });
 
         setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setResizable(false);
     }
 }

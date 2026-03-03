@@ -71,6 +71,21 @@ public class DoctorDashboard extends JFrame {
         bottomPanel.add(btnMissed);
         bottomPanel.add(searchBtn);
 
+        JButton logoutBtn = new JButton("Logout");
+        Theme.styleDangerButton(logoutBtn);
+
+        logoutBtn.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout",
+                    JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                com.hams.util.SessionManager.clear();
+                new LoginFrame();
+                dispose();
+            }
+        });
+
+        bottomPanel.add(logoutBtn);
+
         add(bottomPanel, BorderLayout.SOUTH);
 
         setVisible(true);

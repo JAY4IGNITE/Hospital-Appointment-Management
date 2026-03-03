@@ -70,6 +70,11 @@ public class BookAppointmentFrame extends JFrame {
         }
 
         JTextField patientField = new JTextField();
+        com.hams.model.User user = com.hams.util.SessionManager.getUser();
+        if (user != null && user instanceof com.hams.model.Patient) {
+            patientField.setText(((com.hams.model.Patient) user).getName());
+            patientField.setEditable(false);
+        }
 
         // Date Field
         JTextField dateField = new JTextField(); // Simple text field for date
@@ -127,6 +132,13 @@ public class BookAppointmentFrame extends JFrame {
         styleGreenButton(bookBtn);
 
         buttonPanel.add(bookBtn);
+
+        JButton backBtn = new JButton("Back");
+        styleGreenButton(backBtn); // Re-using green style for consistency, or maybe standard style?
+        backBtn.setBackground(new Color(149, 165, 166)); // Grey for Back
+
+        backBtn.addActionListener(e -> dispose());
+        buttonPanel.add(backBtn);
         add(buttonPanel, BorderLayout.SOUTH);
 
         // 🔹 Button Action

@@ -83,36 +83,6 @@ public class DBConnection {
                     "status VARCHAR(20))";
             stmt.execute(createAppointmentsTable);
 
-            // --- New Tables as per Request ---
-
-            // Create patient Table
-            String createPatientTable = "CREATE TABLE IF NOT EXISTS patient (" +
-                    "patient_id INT PRIMARY KEY, " +
-                    "patient_name VARCHAR(100) NOT NULL, " +
-                    "age INT, " +
-                    "phone VARCHAR(15), " +
-                    "address VARCHAR(200))";
-            stmt.execute(createPatientTable);
-
-            // Create doctor Table
-            String createDoctorTable = "CREATE TABLE IF NOT EXISTS doctor (" +
-                    "doctor_id INT PRIMARY KEY, " +
-                    "doctor_name VARCHAR(100) NOT NULL, " +
-                    "specialization VARCHAR(50), " +
-                    "phone VARCHAR(15))";
-            stmt.execute(createDoctorTable);
-
-            // Create appointment Table
-            String createAppointmentTable = "CREATE TABLE IF NOT EXISTS appointment (" +
-                    "appointment_id INT PRIMARY KEY, " +
-                    "patient_id INT, " +
-                    "doctor_id INT, " +
-                    "appointment_date DATE NOT NULL, " +
-                    "appointment_time VARCHAR(20) NOT NULL, " +
-                    "FOREIGN KEY (patient_id) REFERENCES patient(patient_id), " +
-                    "FOREIGN KEY (doctor_id) REFERENCES doctor(doctor_id))";
-            stmt.execute(createAppointmentTable);
-
             System.out.println("Database tables initialized.");
 
         } catch (SQLException e) {

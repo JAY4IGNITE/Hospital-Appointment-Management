@@ -81,14 +81,14 @@ public class SignupFrame extends JFrame {
             String pid = "P-" + UUID.randomUUID().toString().substring(0, 4).toUpperCase();
 
             Patient newPatient = new Patient(pid, name, email, pass);
-            try {
-                PatientDAO.addPatient(newPatient);
+            if (PatientDAO.addPatient(newPatient)) {
                 JOptionPane.showMessageDialog(this, "Registration Successful! Please Login.");
                 dispose();
                 new LoginFrame();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Registration Failed: " + ex.getMessage());
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Registration Failed. Email might presumably exist or database error.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
 

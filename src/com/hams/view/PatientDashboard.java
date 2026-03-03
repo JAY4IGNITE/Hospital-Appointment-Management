@@ -80,6 +80,21 @@ public class PatientDashboard extends JFrame {
         buttonPanel.add(viewBtn);
         buttonPanel.add(searchBtn);
 
+        JButton logoutBtn = new JButton("Logout");
+        Theme.styleDangerButton(logoutBtn);
+
+        logoutBtn.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout",
+                    JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                com.hams.util.SessionManager.clear();
+                new LoginFrame();
+                dispose();
+            }
+        });
+
+        buttonPanel.add(logoutBtn);
+
         add(buttonPanel, BorderLayout.SOUTH);
 
         // 🔹 Actions

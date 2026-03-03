@@ -24,7 +24,19 @@ public class ViewAppointmentsFrame extends JFrame {
 
                 DefaultTableModel model = new DefaultTableModel(columns, 0);
 
-                List<Appointment> appointments = AppointmentDAO.getAllAppointments();
+                List<Appointment> appointments;
+                com.hams.model.User user = com.hams.util.SessionManager.getUser();
+
+                if (user != null && "PATIENT".equalsIgnoreCase(user.getRole())) {
+                        if (user instanceof com.hams.model.Patient) {
+                                appointments = AppointmentDAO
+                                                .getAppointmentsByPatient(((com.hams.model.Patient) user).getName());
+                        } else {
+                                appointments = AppointmentDAO.getAllAppointments(); // Fallback
+                        }
+                } else {
+                        appointments = AppointmentDAO.getAllAppointments();
+                }
 
                 for (Appointment a : appointments) {
                         model.addRow(new Object[] {
@@ -39,7 +51,15 @@ public class ViewAppointmentsFrame extends JFrame {
                 JTable table = new JTable(model);
                 table.setRowHeight(28);
 
-                add(new JScrollPane(table));
+                add(new JScrollPane(table), java.awt.BorderLayout.CENTER);
+
+                JPanel buttonPanel = new JPanel();
+                JButton backBtn = new JButton("Back");
+                com.hams.util.Theme.styleButton(backBtn);
+                backBtn.addActionListener(e -> dispose());
+                buttonPanel.add(backBtn);
+
+                add(buttonPanel, java.awt.BorderLayout.SOUTH);
                 setVisible(true);
         }
 }

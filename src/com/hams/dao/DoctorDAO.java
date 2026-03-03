@@ -102,6 +102,9 @@ public class DoctorDAO {
 
                     conn.commit();
                     return true;
+                } catch (SQLException e) {
+                    conn.rollback();
+                    e.printStackTrace();
                 }
             } else {
                 // Doctor not found

@@ -155,4 +155,30 @@ public class AppointmentDAO {
         }
         return false; // Fail safe
     }
+
+    public static List<Appointment> getAppointmentsByPatient(String patientName) {
+        List<Appointment> result = new ArrayList<>();
+        String sql = "SELECT * FROM appointments WHERE patient_name = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, patientName);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                result.add(new Appointment(
+                        rs.getInt("id"),
+                        rs.getString("patient_name"),
+                        rs.getString("doctor_name"),
+                        rs.getString("appointment_date"),
+                        rs.getString("appointment_time"),
+                        rs.getString("symptoms"),
+                        rs.getString("status")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
