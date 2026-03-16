@@ -2,17 +2,20 @@ package com.hams.view;
 
 import com.hams.dao.AppointmentDAO;
 import com.hams.model.Appointment;
+import com.hams.util.Theme;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.util.List;
 
 public class ViewAppointmentsFrame extends JFrame {
 
         public ViewAppointmentsFrame() {
-                setTitle("My Appointments");
-                setSize(700, 300);
-                setLocationRelativeTo(null);
+                Theme.setupFrame(this, "My Appointments", 750, 500);
+                setLayout(new BorderLayout());
+
+                add(Theme.createHeaderPanel("My Appointments"), BorderLayout.NORTH);
 
                 String[] columns = {
                                 "Doctor Name",
@@ -49,17 +52,22 @@ public class ViewAppointmentsFrame extends JFrame {
                 }
 
                 JTable table = new JTable(model);
-                table.setRowHeight(28);
+                Theme.styleTable(table);
 
-                add(new JScrollPane(table), java.awt.BorderLayout.CENTER);
+                JScrollPane scrollPane = new JScrollPane(table);
+                scrollPane.getViewport().setBackground(Theme.BG_COLOR);
+                scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+                add(scrollPane, BorderLayout.CENTER);
 
                 JPanel buttonPanel = new JPanel();
+                buttonPanel.setOpaque(false);
                 JButton backBtn = new JButton("Back");
-                com.hams.util.Theme.styleButton(backBtn);
+                Theme.styleButton(backBtn);
                 backBtn.addActionListener(e -> dispose());
                 buttonPanel.add(backBtn);
 
-                add(buttonPanel, java.awt.BorderLayout.SOUTH);
+                add(buttonPanel, BorderLayout.SOUTH);
                 setVisible(true);
         }
 }

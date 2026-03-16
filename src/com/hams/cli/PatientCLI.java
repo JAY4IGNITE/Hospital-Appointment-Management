@@ -72,7 +72,11 @@ public class PatientCLI {
         }
 
         String docName = doctor.getName();
-        String date = InputHelper.readString("Enter Date (YYYY-MM-DD)");
+        System.out.println("Enter Appointment Date:");
+        int year = InputHelper.readInt("  Year (e.g. 2024)");
+        int month = InputHelper.readInt("  Month (1-12)");
+        int day = InputHelper.readInt("  Day (1-31)");
+        String date = String.format("%04d-%02d-%02d", year, month, day);
 
         System.out.println("Select Time Slot:");
         java.util.List<String> slots = com.hams.util.TimeSlots.getAll();
@@ -89,8 +93,9 @@ public class PatientCLI {
 
         String symptoms = InputHelper.readString("Symptoms");
 
-            if (AppointmentDAO.isTimeSlotAvailable(docName, date, time)) {
-            Appointment app = new Appointment(patient.getName(), docName, date, time, symptoms);
+        if (AppointmentDAO.isTimeSlotAvailable(docName, date, time)) {
+            Appointment app = new Appointment(patient.getPatientId(), patient.getName(), doctor.getDoctorId(), docName,
+                    date, time, symptoms);
             if (AppointmentDAO.addAppointment(app)) {
                 System.out.println("Appointment booked successfully!");
             } else {

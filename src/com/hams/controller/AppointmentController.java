@@ -5,7 +5,9 @@ import com.hams.model.Appointment;
 
 public class AppointmentController {
     public static boolean bookAppointment(
+            String patientId,
             String patientName,
+            String doctorId,
             String doctorName,
             String date,
             String timeSlot,
@@ -16,13 +18,14 @@ public class AppointmentController {
         }
 
         Appointment appointment = new Appointment(
+                patientId,
                 patientName,
+                doctorId,
                 doctorName,
                 date,
                 timeSlot,
                 symptoms);
 
-        AppointmentDAO.addAppointment(appointment);
-        return true;
+        return AppointmentDAO.addAppointment(appointment);
     }
 }

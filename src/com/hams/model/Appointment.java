@@ -8,6 +8,8 @@ public class Appointment implements Serializable {
 
     private String patientName;
     private String doctorName;
+    private String patientId;
+    private String doctorId;
     private String timeSlot;
     private String symptoms;
 
@@ -16,9 +18,11 @@ public class Appointment implements Serializable {
     private int id;
     private String status;
 
-    public Appointment(String patientName, String doctorName,
+    public Appointment(String patientId, String patientName, String doctorId, String doctorName,
             String date, String timeSlot, String symptoms) {
+        this.patientId = patientId;
         this.patientName = patientName;
+        this.doctorId = doctorId;
         this.doctorName = doctorName;
         this.date = date;
         this.timeSlot = timeSlot;
@@ -26,15 +30,25 @@ public class Appointment implements Serializable {
         this.status = "SCHEDULED";
     }
 
-    public Appointment(int id, String patientName, String doctorName,
+    public Appointment(int id, String patientId, String patientName, String doctorId, String doctorName,
             String date, String timeSlot, String symptoms, String status) {
         this.id = id;
+        this.patientId = patientId;
         this.patientName = patientName;
+        this.doctorId = doctorId;
         this.doctorName = doctorName;
         this.date = date;
         this.timeSlot = timeSlot;
         this.symptoms = symptoms;
         this.status = status;
+    }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public String getDoctorId() {
+        return doctorId;
     }
 
     public int getId() {

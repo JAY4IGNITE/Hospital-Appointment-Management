@@ -29,14 +29,32 @@ public class Theme {
         frame.setTitle(title);
         frame.setSize(width, height);
         frame.setLocationRelativeTo(null);
+        
+        // Full screen for everything except Login and Registration pages
+        if (!title.toLowerCase().contains("login") && !title.toLowerCase().contains("registration")) {
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        }
+        
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.getContentPane().setBackground(BG_COLOR);
-        frame.setLayout(null); // Or use layouts, but setting BG is key
+        frame.setLayout(null); // Used primarily by Login/Signup, dashboards override this
     }
 
     public static void styleButton(JButton btn) {
+        styleButtonWithColor(btn, SECONDARY);
+    }
+
+    public static void styleDangerButton(JButton btn) {
+        styleButtonWithColor(btn, DANGER);
+    }
+
+    public static void styleSuccessButton(JButton btn) {
+        styleButtonWithColor(btn, ACCENT);
+    }
+
+    private static void styleButtonWithColor(JButton btn, Color color) {
         btn.setFont(BOLD_FONT);
-        btn.setBackground(SECONDARY);
+        btn.setBackground(color);
         btn.setForeground(WHITE);
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
@@ -56,23 +74,56 @@ public class Theme {
                 super.paint(g, c); // Paint text/icon
             }
         });
+
+        // Add Hover Effect
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(color.brighter());
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(color);
+            }
+        });
     }
 
-    public static void styleDangerButton(JButton btn) {
-        styleButton(btn);
-        btn.setBackground(DANGER);
-    }
+    // Custom Rounded Border Class
+    public static class RoundedBorder implements javax.swing.border.Border {
+        private int radius;
+        private Color color;
 
-    public static void styleSuccessButton(JButton btn) {
-        styleButton(btn);
-        btn.setBackground(ACCENT);
+        public RoundedBorder(Color color, int radius) {
+            this.radius = radius;
+            this.color = color;
+        }
+
+        public java.awt.Insets getBorderInsets(java.awt.Component c) {
+            // Using a massive radius as inset collapses the text box height!
+            // Provide a small physical stroke bounds margin instead.
+            return new java.awt.Insets(2, 5, 2, 5);
+        }
+
+        public boolean isBorderOpaque() {
+            return true;
+        }
+
+        public void paintBorder(java.awt.Component c, java.awt.Graphics g, int x, int y, int width, int height) {
+            java.awt.Graphics2D g2 = (java.awt.Graphics2D) g.create();
+            g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(color);
+            g2.setStroke(new java.awt.BasicStroke(2.0f));
+            g2.drawRoundRect(x + 1, y + 1, width - 3, height - 3, radius, radius);
+            g2.dispose();
+        }
     }
 
     public static void styleTextField(JTextField field) {
         field.setFont(NORMAL_FONT);
+        field.setOpaque(true); // Important: must be true to render the background properly
+        field.setBackground(new Color(250, 250, 250)); // Slightly off-white for contrast
+        field.setForeground(TEXT_COLOR);
         field.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(189, 195, 199)),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+                new RoundedBorder(new Color(150, 150, 150), 20), // 20px custom rounded light gray/black border
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)));
     }
 
     public static void styleLabel(JLabel label) {
@@ -83,5 +134,32 @@ public class Theme {
     public static void styleHeader(JLabel label) {
         label.setFont(HEADER_FONT);
         label.setForeground(PRIMARY);
+    }
+
+    public static void styleTable(javax.swing.JTable table) {
+        table.setRowHeight(30);
+        table.setFont(NORMAL_FONT);
+        table.setSelectionBackground(new Color(213, 245, 227));
+        table.setShowGrid(false);
+        table.setIntercellSpacing(new java.awt.Dimension(0, 0));
+
+        javax.swing.table.JTableHeader header = table.getTableHeader();
+        header.setBackground(PRIMARY);
+        header.setForeground(WHITE);
+        header.setFont(BOLD_FONT);
+        header.setPreferredSize(new java.awt.Dimension(100, 35));
+    }
+
+    public static javax.swing.JPanel createHeaderPanel(String titleText) {
+        javax.swing.JPanel panel = new javax.swing.JPanel();
+        panel.setBackground(PRIMARY);
+        panel.setPreferredSize(new java.awt.Dimension(100, 60));
+        panel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 15));
+
+        JLabel label = new JLabel(titleText);
+        label.setFont(HEADER_FONT);
+        label.setForeground(WHITE);
+        panel.add(label);
+        return panel;
     }
 }

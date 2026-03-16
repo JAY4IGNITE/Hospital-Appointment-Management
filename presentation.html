@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Appointment Management System - Presentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2C3E50;
+            --secondary: #3498DB;
+            --accent: #2ECC71;
+            --danger: #E74C3C;
+            --bg: #F4F7F6;
+            --text: #2C3E50;
+            --light-text: #7F8C8D;
+            --white: #FFFFFF;
+            --gradient: linear-gradient(135deg, #2C3E50 0%, #3498DB 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            /* Prevent vertical scrolling, use horizontal slider */
+            line-height: 1.6;
+        }
+
+        .slider-window {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slider-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide-wrapper {
+            min-width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .slide {
+            background: var(--white);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            padding: 60px;
+            width: 100%;
+            max-width: 1100px;
+            height: 100%;
+            max-height: 800px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .slide-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .slide-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 6px;
+            background: var(--secondary);
+            border-radius: 3px;
+        }
+
+        .hero-slide {
+            background: var(--gradient);
+            color: var(--white);
+            text-align: center;
+            align-items: center;
+        }
+
+        .hero-slide .slide-title {
+            color: var(--white);
+            font-size: 4rem;
+        }
+
+        .hero-slide .slide-title::after {
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .banner-img {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 16px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 16px;
+            border-left: 5px solid var(--secondary);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.02);
+        }
+
+        .feature-card h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .tech-pill {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            margin: 5px;
+            font-weight: 600;
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 40px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 20px;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .code-mockup {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .database-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .db-table {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+        }
+
+        .db-table-header {
+            font-weight: 700;
+            color: var(--secondary);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .db-column {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .type {
+            color: #888;
+        }
+
+        /* Navigation Controls */
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover:not(:disabled) {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .control-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            color: #94a3b8;
+        }
+
+        .slide-indicator {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.2rem;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .slide-title {
+                font-size: 2rem;
+            }
+
+            .hero-slide .slide-title {
+                font-size: 2.5rem;
+            }
+
+            .slide {
+                padding: 30px;
+            }
+
+            .slide-wrapper {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="slider-window">
+        <div class="slider-container" id="slider">
+
+            <!-- SLIDE 1: HERO -->
+            <div class="slide-wrapper">
+                <section class="slide hero-slide">
+                    <h1 class="slide-title">HOSPITAL APPOINTMENT MANAGEMENT SYSTEM</h1>
+                    <p class="subtitle">A Modern, Effortless Patient-Doctor Management Solution</p>
+                    <img src="hospital_management_banner_1772771397051.png" alt="Hospital Management"
+                        class="banner-img">
+                    <div style="margin-top: 40px;">
+                        <span class="tech-pill">Java Desktop</span>
+                        <span class="tech-pill">MySQL Database</span>
+                        <span class="tech-pill">Sleek Swing UI</span>
+                    </div>
+                </section>
+            </div>
+
+            <!-- SLIDE 2: THE CHALLENGE -->
+            <div class="slide-wrapper">
+                <section class="slide">
+                    <h2 class="slide-title">The Challenge</h2>
+                    <div class="grid-2">
+                        <div>
+                            <p style="font-size: 1.2rem; margin-bottom: 20px;">Manual hospital scheduling is prone to
+                                errors, overlapping appointments, and inefficient record-keeping.</p>
+                            <div class="feature-card">
+                                <h3>Complex workflows</h3>
+                                <p>Doctors struggle to track patients and schedules across multiple shifts.</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>Data Silos</h3>
+                                <p>Patient history and appointment details are often disconnected.</p>
+                            </div>
+                        </div>
+                        <div class="stat-grid">
+                            <div class="stat-box">
+                                <div class="stat-number">65%</div>
+                                <p>Reduction in Admin Overhead</p>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number">100%</div>
+                                <p>Paperless Efficiency</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- SLIDE 3: OUR SOLUTION -->
+            <div class="slide-wrapper">
+                <section class="slide">
+                    <h2 class="slide-title">Proposed Solution</h2>
+                    <p class="subtitle">A robust, scalable Desktop Application designed for high-performance hospital
+                        management.</p>
+                    <div class="grid-2">
+                        <div>
+                            <div class="feature-card">
+                                <h3>Role-Based Access Control</h3>
+                                <p>Dedicated modules for Administrators, Doctors, and Patients for enhanced security.
+                                </p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>Seamless Connectivity</h3>
+                                <p>Centralized MySQL database ensures data consistency across all user levels.</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>Visual User Experience</h3>
+                                <p>Java Swing with a custom modern theme (Theme.java) for a premium feel.</p>
+                            </div>
+                        </div>
+                        <div style="text-align: center;">
+                            <img src="https://img.icons8.com/bubbles/200/000000/doctor-registration.png"
+                                alt="Solution Icon">
+                            <h3>Empowering Medical Care</h3>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- SLIDE 4: TECHNOLOGY STACK -->
+            <div class="slide-wrapper">
+                <section class="slide">
+                    <h2 class="slide-title">Technology Stack</h2>
+                    <div class="grid-2">
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                            <div>
+                                <h3 style="color: var(--secondary);">Frontend Development</h3>
+                                <p>Java Swing & AWT for a cross-platform, high-performance desktop interface.</p>
+                            </div>
+                            <div>
+                                <h3 style="color: var(--secondary);">Backend Logic</h3>
+                                <p>Java SE 8+ utilizing Object-Oriented Programming (OOP) principles and JDBC.</p>
+                            </div>
+                            <div>
+                                <h3 style="color: var(--secondary);">Database Engine</h3>
+                                <p>MySQL for robust relational data storage and efficient querying.</p>
+                            </div>
+                        </div>
+                        <div class="code-mockup">
+                            <pre>
+// Database Connection Layer
+public class DBConnection {
+    private static final String URL = 
+        "jdbc:mysql://localhost:3306/hospital_mgmt_db";
+    
+    public static Connection getConnection() {
+        return DriverManager.getConnection(URL, 
+            "root", "password");
+    }
+}
+</pre>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- SLIDE 5: DATABASE ARCHITECTURE -->
+            <div class="slide-wrapper">
+                <section class="slide">
+                    <h2 class="slide-title">Relational Data Architecture</h2>
+                    <div class="grid-2">
+                        <div class="database-diagram">
+                            <div class="db-table">
+                                <div class="db-table-header">Users (Auth)</div>
+                                <div class="db-column"><span>id</span> <span class="type">INT PK</span></div>
+                                <div class="db-column"><span>username</span> <span class="type">VARCHAR</span></div>
+                                <div class="db-column"><span>role</span> <span class="type">VARCHAR</span></div>
+                            </div>
+                            <div class="db-table">
+                                <div class="db-table-header">Patients</div>
+                                <div class="db-column"><span>patient_id</span> <span class="type">VARCHAR PK</span>
+                                </div>
+                                <div class="db-column"><span>name</span> <span class="type">VARCHAR</span></div>
+                                <div class="db-column"><span>phone</span> <span class="type">VARCHAR</span></div>
+                            </div>
+                        </div>
+                        <div class="database-diagram">
+                            <div class="db-table">
+                                <div class="db-table-header">Doctors</div>
+                                <div class="db-column"><span>doctor_id</span> <span class="type">VARCHAR PK</span></div>
+                                <div class="db-column"><span>specialization</span> <span class="type">VARCHAR</span>
+                                </div>
+                            </div>
+                            <div class="db-table" style="border: 2px solid var(--accent);">
+                                <div class="db-table-header">Appointments</div>
+                                <div class="db-column"><span>appointment_id</span> <span class="type">VARCHAR PK</span>
+                                </div>
+                                <div class="db-column"><span>patient_id</span> <span class="type">FK (Patients)</span>
+                                </div>
+                                <div class="db-column"><span>doctor_id</span> <span class="type">FK (Doctors)</span>
+                                </div>
+                                <div class="db-column"><span>status</span> <span class="type">VARCHAR</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- SLIDE 6: UI & DESIGN SYSTEM -->
+            <div class="slide-wrapper">
+                <section class="slide">
+                    <h2 class="slide-title">Premium Interface</h2>
+                    <div class="grid-2">
+                        <div>
+                            <p>Unlike standard Java Swing apps, HAMS implements a custom <strong>Theme Engine</strong>
+                                that transforms basic components into modern experiences.</p>
+                            <ul style="margin-left: 20px; margin-top: 20px;">
+                                <li style="margin-bottom: 10px;"><strong>Rounded Buttons</strong> with Hover Effects
+                                </li>
+                                <li style="margin-bottom: 10px;"><strong>Material Design</strong> Tonal Colors</li>
+                                <li style="margin-bottom: 10px;"><strong>Responsive Tables</strong> with Custom Headers
+                                </li>
+                                <li style="margin-bottom: 10px;"><strong>Consistent Typography</strong> (Segoe UI /
+                                    Outfit)</li>
+                            </ul>
+                        </div>
+                        <div
+                            style="background: var(--bg); padding: 40px; border-radius: 20px; border: 1px dashed var(--secondary);">
+                            <div
+                                style="height: 50px; background: #2c3e50; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; padding: 0 15px; color: white; font-weight: 600;">
+                                Dashboard Header</div>
+                            <div
+                                style="height: 40px; background: #3498db; border-radius: 20px; width: 120px; margin-bottom: 15px;">
+                            </div>
+                            <div style="height: 100px; background: white; border-radius: 8px; border: 1px solid #ddd;">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- SLIDE 7: KEY FEATURES -->
+            <div class="slide-wrapper">
+                <section class="slide">
+                    <h2 class="slide-title">Core Functionality</h2>
+                    <div class="grid-2">
+                        <div class="feature-card" style="border-left-color: var(--accent);">
+                            <h3>Smart Scheduling</h3>
+                            <p>Automated appointment IDs and real-time validation for dates and times.</p>
+                        </div>
+                        <div class="feature-card" style="border-left-color: var(--secondary);">
+                            <h3>Patient Insights</h3>
+                            <p>Comprehensive dashboard for doctors to view patient history and symptoms.</p>
+                        </div>
+                        <div class="feature-card" style="border-left-color: var(--danger);">
+                            <h3>Admin Control Room</h3>
+                            <p>Full management of system users, doctor registrations, and patient records.</p>
+                        </div>
+                        <div class="feature-card" style="border-left-color: var(--primary);">
+                            <h3>Instant Feedback</h3>
+                            <p>Progress bars, success prompts, and error handling for a smooth workflow.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- SLIDE 8: THE FUTURE -->
+            <div class="slide-wrapper">
+                <section class="slide hero-slide">
+                    <h1 class="slide-title">Future Roadmap</h1>
+                    <p class="subtitle">Envisioning the next phase of Healthcare Management</p>
+                    <div class="grid-2" style="text-align: left;">
+                        <div class="feature-card"
+                            style="background: rgba(255,255,255,0.1); color: white; border: none; backdrop-filter: blur(5px);">
+                            <h3 style="color: white;">Mobile Integration</h3>
+                            <p>Real-time notifications for patients via SMS/Email.</p>
+                        </div>
+                        <div class="feature-card"
+                            style="background: rgba(255,255,255,0.1); color: white; border: none; backdrop-filter: blur(5px);">
+                            <h3 style="color: white;">Telemedicine Support</h3>
+                            <p>Video consultations integrated directly into the doctor dashboard.</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 60px;">
+                        <h2 style="font-size: 2.5rem;">Thank You!</h2>
+                        <p style="margin-top: 10px;">Questions? Reach out at support@hams.com</p>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Controller UI for Side-by-Side Swiping -->
+    <div class="controls">
+        <button class="control-btn" id="prevBtn" onclick="moveSlide(-1)" disabled>← Previous</button>
+        <div class="slide-indicator" id="indicator">1 / 8</div>
+        <button class="control-btn" id="nextBtn" onclick="moveSlide(1)">Next →</button>
+    </div>
+
+    <script>
+        const slider = document.getElementById('slider');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const indicator = document.getElementById('indicator');
+        const slides = document.querySelectorAll('.slide-wrapper');
+        const totalSlides = slides.length;
+
+        let currentSlide = 0;
+
+        function updateSlider() {
+            // Move slider right or left horizontally
+            slider.style.transform = `translateX(-${currentSlide * 100}vw)`;
+
+            // Update button disables
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+
+            // Update indicator numbers
+            indicator.textContent = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function moveSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            updateSlider();
+        }
+
+        // Add keyboard navigation (Left/Right arrow keys)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentSlide < totalSlides - 1) {
+                moveSlide(1);
+            } else if (e.key === 'ArrowLeft' && currentSlide > 0) {
+                moveSlide(-1);
+            }
+        });
+    </script>
+</body>
+
+</html>

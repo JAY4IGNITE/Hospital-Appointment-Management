@@ -2,6 +2,7 @@ package com.hams.view;
 
 import com.hams.dao.AppointmentDAO;
 import com.hams.model.Appointment;
+import com.hams.util.Theme;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -15,32 +16,27 @@ public class SearchFrame extends JFrame {
     private DefaultTableModel tableModel;
 
     public SearchFrame() {
-        setTitle("Search Appointments");
-        setSize(800, 500);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        Theme.setupFrame(this, "Search Appointments", 800, 550);
         setLayout(new BorderLayout());
 
         // 🎨 Header
-        JPanel headerPanel = new JPanel();
-        headerPanel.setBackground(new Color(52, 152, 219));
-        JLabel headerLabel = new JLabel("Appointment Search");
-        headerLabel.setForeground(Color.WHITE);
-        headerLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        headerPanel.add(headerLabel);
-        add(headerPanel, BorderLayout.NORTH);
+        add(Theme.createHeaderPanel("Appointment Search"), BorderLayout.NORTH);
 
         // 🔍 Search Bar Panel
         JPanel searchPanel = new JPanel();
+        searchPanel.setOpaque(false);
         searchPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
 
         searchField = new JTextField(30);
-        searchField.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        Theme.styleTextField(searchField);
 
         JButton searchButton = new JButton("Search");
-        styleBlueButton(searchButton);
+        Theme.styleButton(searchButton);
 
-        searchPanel.add(new JLabel("Enter Patient/Doctor Name or Date:"));
+        JLabel promptLabel = new JLabel("Enter Patient/Doctor Name or Date:");
+        Theme.styleLabel(promptLabel);
+
+        searchPanel.add(promptLabel);
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
 
@@ -50,14 +46,15 @@ public class SearchFrame extends JFrame {
         String[] columnNames = { "Patient Name", "Doctor Name", "Date", "Time", "Symptoms" };
         tableModel = new DefaultTableModel(columnNames, 0);
         resultTable = new JTable(tableModel);
-        resultTable.setRowHeight(25);
-        resultTable.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        resultTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        Theme.styleTable(resultTable);
 
         JScrollPane scrollPane = new JScrollPane(resultTable);
+        scrollPane.getViewport().setBackground(Theme.BG_COLOR);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
         // Combine Search Panel and Table
         JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setOpaque(false);
         centerPanel.add(searchPanel, BorderLayout.NORTH);
         centerPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -92,13 +89,5 @@ public class SearchFrame extends JFrame {
                 });
             }
         }
-    }
-
-    private void styleBlueButton(JButton btn) {
-        btn.setBackground(new Color(52, 152, 219));
-        btn.setForeground(Color.WHITE);
-        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btn.setFocusPainted(false);
-        btn.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
     }
 }

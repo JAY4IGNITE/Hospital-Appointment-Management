@@ -2,6 +2,8 @@ package com.hams.view;
 
 import com.hams.dao.DoctorDAO;
 import com.hams.model.Doctor;
+import com.hams.util.Theme;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -13,26 +15,44 @@ public class AdminDoctorFrame extends JFrame {
     private DefaultTableModel model;
 
     public AdminDoctorFrame() {
-        setTitle("Manage Doctors");
-        setSize(800, 500);
-        setLocationRelativeTo(null);
+        Theme.setupFrame(this, "Manage Doctors", 850, 600);
+        setLayout(new BorderLayout());
+
+        add(Theme.createHeaderPanel("Doctor Management"), BorderLayout.NORTH);
 
         // Toolbar
-        JPanel toolbar = new JPanel();
+        JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        toolbar.setOpaque(false);
+
         JButton addBtn = new JButton("Add Doctor");
+        Theme.styleButton(addBtn);
+
         JButton deleteBtn = new JButton("Delete Doctor");
+        Theme.styleDangerButton(deleteBtn);
+
         JButton refreshBtn = new JButton("Refresh");
+        Theme.styleButton(refreshBtn);
 
         toolbar.add(addBtn);
         toolbar.add(deleteBtn);
         toolbar.add(refreshBtn);
-        add(toolbar, BorderLayout.NORTH);
+
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setOpaque(false);
+        centerPanel.add(toolbar, BorderLayout.NORTH);
 
         // Table
         String[] columns = { "ID", "Name", "Specialization", "Hospital", "Email" };
         model = new DefaultTableModel(columns, 0);
         table = new JTable(model);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        Theme.styleTable(table);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.getViewport().setBackground(Theme.BG_COLOR);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
+
+        add(centerPanel, BorderLayout.CENTER);
 
         // Actions
         addBtn.addActionListener(e -> {

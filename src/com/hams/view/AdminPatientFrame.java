@@ -2,6 +2,8 @@ package com.hams.view;
 
 import com.hams.dao.PatientDAO;
 import com.hams.model.Patient;
+import com.hams.util.Theme;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -13,24 +15,40 @@ public class AdminPatientFrame extends JFrame {
     private DefaultTableModel model;
 
     public AdminPatientFrame() {
-        setTitle("Manage Patients");
-        setSize(800, 500);
-        setLocationRelativeTo(null);
+        Theme.setupFrame(this, "Manage Patients", 800, 600);
+        setLayout(new BorderLayout());
+
+        add(Theme.createHeaderPanel("Patient Management"), BorderLayout.NORTH);
 
         // Toolbar
-        JPanel toolbar = new JPanel();
+        JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        toolbar.setOpaque(false);
+
         JButton deleteBtn = new JButton("Delete Patient");
+        Theme.styleDangerButton(deleteBtn);
+
         JButton refreshBtn = new JButton("Refresh");
+        Theme.styleButton(refreshBtn);
 
         toolbar.add(deleteBtn);
         toolbar.add(refreshBtn);
-        add(toolbar, BorderLayout.NORTH);
+
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setOpaque(false);
+        centerPanel.add(toolbar, BorderLayout.NORTH);
 
         // Table
         String[] columns = { "ID", "Name", "Email" };
         model = new DefaultTableModel(columns, 0);
         table = new JTable(model);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        Theme.styleTable(table);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.getViewport().setBackground(Theme.BG_COLOR);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
+
+        add(centerPanel, BorderLayout.CENTER);
 
         // Actions
         deleteBtn.addActionListener(e -> {

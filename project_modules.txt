@@ -1,0 +1,69 @@
+System Modules - Hospital Appointment Management System (HAMS)
+
+The application is structured using the Model-View-Controller (MVC) Architectural Pattern, layered into distinct modules (Java packages) to maintain clean code and separation of concerns.
+
+Here is a comprehensive breakdown of all the modules present in this project:
+
+
+1. Model Layer (com.hams.model)
+Contains the Plain Old Java Objects (POJOs) that represent the core business entities in the system. These classes act as data containers mapped to the database tables.
+
+User.java: Represents a system user (contains ID, username, password, role).
+Doctor.java: Represents a medical professional (extends user details with specialization, etc.).
+Patient.java: Represents a registered patient.
+Appointment.java: Represents a scheduled appointment between a patient and a doctor, including date, time, and status.
+
+
+2. Data Access Object (DAO) Layer (com.hams.dao)
+This module handles all interactions with the MySQL Database. It contains the logic for SQL queries and CRUD (Create, Read, Update, Delete) operations.
+
+UserDAO.java: Handles authentication verification and user registration.
+DoctorDAO.java: Handles fetching doctor lists, adding new doctors, and updating doctor info.
+PatientDAO.java: Manages patient records, retrieval, and updates.
+AppointmentDAO.java: Manages the booking of new appointments, fetching schedules, and updating appointment statuses.
+
+
+3. Controller Layer (com.hams.controller)
+Acts as the intermediary between the View (GUI) and the Model/DAO layers. It handles user inputs and enforces business logic.
+
+LoginController.java: Orchestrates the login flow and routes users to their specific dashboards based on their roles.
+AppointmentController.java: Validates available slots and processes appointment booking requests.
+DoctorController.java: Logic for managing doctor operations.
+PatientController.java: Logic for managing patient operations.
+
+
+4. View Layer (com.hams.view)
+Contains all the Java Swing graphical user interface (GUI) components. This is what the end-users interact with.
+
+Authentication:
+LoginFrame.java: The main login screen.
+SignupFrame.java: For new user registration.
+
+Dashboards:
+AdminDashboard.java: Control center for the Administrator.
+DoctorDashboard.java: Shows the doctor's upcoming appointments.
+PatientDashboard.java: Landing page for patients to access services.
+
+Admin Management Tools:
+AdminDoctorFrame.java / AddDoctorDialog.java: Interfaces for managing the hospital's doctors.
+AdminPatientFrame.java: Interface for viewing and managing registered patients.
+
+Patient Service Interfaces:
+BookAppointmentFrame.java: GUI for selecting a doctor and booking a time slot.
+SearchFrame.java: Interface for finding specific doctors or specialists.
+ViewAppointmentsFrame.java: Displays a patient's booked appointments and their statuses.
+
+
+5. Utility Layer (com.hams.util)
+Helper classes that provide cross-cutting functionalities used throughout the application.
+
+Theme.java: A custom styling engine that applies modern colors, fonts, and rounded borders to default Java Swing components.
+DBConnection.java: The core JDBC configuration that establishes the secure connection to the MySQL server.
+SessionManager.java: Maintains the global state of the currently logged-in user to keep track of their identity across different frames.
+TimeSlots.java: Generates and manages valid time slots for appointment scheduling.
+DataExport.java / DataSeeder.java: Tools for database initialization and backing up data.
+
+
+6. Main (com.hams.main)
+
+Main.java: The main entry point of the Java application. It initializes the database connection and launches the LoginFrame.

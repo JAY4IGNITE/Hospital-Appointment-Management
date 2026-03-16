@@ -3,12 +3,12 @@ package com.hams.main;
 import java.util.Scanner;
 import com.hams.view.LoginFrame;
 import com.hams.util.DBConnection;
-import com.hams.util.DataSeeder;
+
 
 public class Main {
     public static void main(String[] args) {
         DBConnection.initializeDatabase();
-        DataSeeder.seed();
+        // DataSeeder.seed(); // Uncomment if you want to wipe and re-seed the DB on startup
         String mode;
         if (args.length > 0) {
             mode = args[0].trim().toUpperCase();
@@ -20,13 +20,12 @@ public class Main {
             } else {
                 mode = "G"; // Default to GUI if no input
             }
-            scanner.close();
         }
 
         if ("C".equals(mode) || "CLI".equals(mode)) {
             new com.hams.cli.CLIApp().start();
         } else {
             new LoginFrame();
-        }
+        } 
     }
 }

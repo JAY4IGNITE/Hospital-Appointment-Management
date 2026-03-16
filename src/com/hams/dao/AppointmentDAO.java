@@ -9,20 +9,27 @@ import java.util.List;
 public class AppointmentDAO {
 
     public static boolean addAppointment(Appointment appointment) {
-        String sql = "INSERT INTO appointments (patient_name, doctor_name, appointment_date, appointment_time, symptoms, status) VALUES (?, ?, ?, ?, ?, 'SCHEDULED')";
+        String sql = "INSERT INTO appointments (appointment_id, patient_id, patient_name, doctor_id, doctor_name, appointment_date, appointment_time, symptoms, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'SCHEDULED')";
 
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, appointment.getPatientName());
-            pstmt.setString(2, appointment.getDoctorName());
-            pstmt.setString(3, appointment.getDate()); // Fixed: date stored as string
-            pstmt.setString(4, appointment.getTimeSlot());
-            pstmt.setString(5, appointment.getSymptoms());
+            // Generate a simple unique ID
+            String appointmentId = "APT" + System.currentTimeMillis() % 10000;
+
+            pstmt.setString(1, appointmentId);
+            pstmt.setString(2, appointment.getPatientId());
+            pstmt.setString(3, appointment.getPatientName());
+            pstmt.setString(4, appointment.getDoctorId());
+            pstmt.setString(5, appointment.getDoctorName());
+            pstmt.setString(6, appointment.getDate());
+            pstmt.setString(7, appointment.getTimeSlot());
+            pstmt.setString(8, appointment.getSymptoms());
 
             int rows = pstmt.executeUpdate();
             return rows > 0;
         } catch (SQLException e) {
+            System.err.println("Error adding appointment: " + e.getMessage()); // Be explicit
             e.printStackTrace();
         }
         return false;
@@ -39,7 +46,9 @@ public class AppointmentDAO {
             while (rs.next()) {
                 appointments.add(new Appointment(
                         rs.getInt("id"),
+                        rs.getString("patient_id"),
                         rs.getString("patient_name"),
+                        rs.getString("doctor_id"),
                         rs.getString("doctor_name"),
                         rs.getString("appointment_date"),
                         rs.getString("appointment_time"),
@@ -65,7 +74,9 @@ public class AppointmentDAO {
             while (rs.next()) {
                 result.add(new Appointment(
                         rs.getInt("id"),
+                        rs.getString("patient_id"),
                         rs.getString("patient_name"),
+                        rs.getString("doctor_id"),
                         rs.getString("doctor_name"),
                         rs.getString("appointment_date"),
                         rs.getString("appointment_time"),
@@ -95,7 +106,9 @@ public class AppointmentDAO {
             while (rs.next()) {
                 result.add(new Appointment(
                         rs.getInt("id"),
+                        rs.getString("patient_id"),
                         rs.getString("patient_name"),
+                        rs.getString("doctor_id"),
                         rs.getString("doctor_name"),
                         rs.getString("appointment_date"),
                         rs.getString("appointment_time"),
@@ -169,7 +182,9 @@ public class AppointmentDAO {
             while (rs.next()) {
                 result.add(new Appointment(
                         rs.getInt("id"),
+                        rs.getString("patient_id"),
                         rs.getString("patient_name"),
+                        rs.getString("doctor_id"),
                         rs.getString("doctor_name"),
                         rs.getString("appointment_date"),
                         rs.getString("appointment_time"),
