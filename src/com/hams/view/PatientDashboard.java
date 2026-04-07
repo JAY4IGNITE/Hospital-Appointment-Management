@@ -105,13 +105,11 @@ public class PatientDashboard extends JFrame {
         JButton bookBtn = createDashboardButton("Book Appointment", btnSize, false);
         bookBtn.addActionListener(e -> {
             int row = doctorTable.getSelectedRow();
-            if (row == -1) {
-                JOptionPane.showMessageDialog(this,
-                        "Please select a doctor first");
-            } else {
-                String doctorName = doctorTable.getValueAt(row, 0).toString();
-                new BookAppointmentFrame(doctorName);
+            String doctorName = "";
+            if (row != -1) {
+                doctorName = doctorTable.getValueAt(row, 0).toString();
             }
+            new BookAppointmentFrame(doctorName);
         });
 
         JButton viewBtn = createDashboardButton("View My Appointments", btnSize, false);
