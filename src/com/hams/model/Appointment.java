@@ -14,6 +14,7 @@ public class Appointment implements Serializable {
     private String symptoms;
 
     private String date;
+    private String appointmentId;
 
     private int id;
     private String status;
@@ -41,6 +42,14 @@ public class Appointment implements Serializable {
         this.timeSlot = timeSlot;
         this.symptoms = symptoms;
         this.status = status;
+    }
+
+    public void setAppointmentId(String appointmentId) {
+        this.appointmentId = appointmentId;
+    }
+
+    public String getAppointmentId() {
+        return appointmentId;
     }
 
     public String getPatientId() {

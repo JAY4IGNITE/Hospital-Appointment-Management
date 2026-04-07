@@ -31,14 +31,28 @@ public class DataSeeder {
         // 2. Setup Baseline
         seedAdmin();
 
-        // 3. Seed Realistic Patients
-        Patient p1 = new Patient("P-1001", "Emma Watson", "emma@gmail.com", "password123");
-        Patient p2 = new Patient("P-1002", "Robert Downey", "robert@gmail.com", "password123");
-        Patient p3 = new Patient("P-1003", "Chris Evans", "chris@gmail.com", "password123");
+        // 3. Seed Realistic Indian Patients
+        Patient p1 = new Patient("P-1001", "Arjun Sharma", "arjun.sharma@gmail.com", "password123");
+        Patient p2 = new Patient("P-1002", "Priya Patel", "priya.patel@gmail.com", "password123");
+        Patient p3 = new Patient("P-1003", "Rahul Verma", "rahul.verma@gmail.com", "password123");
+        Patient p4 = new Patient("P-1004", "Sneha Reddy", "sneha.reddy@gmail.com", "password123");
+        Patient p5 = new Patient("P-1005", "Vikram Singh", "vikram.singh@gmail.com", "password123");
+        Patient p6 = new Patient("P-1006", "Anjali Nair", "anjali.nair@gmail.com", "password123");
+        Patient p7 = new Patient("P-1007", "Rohit Kumar", "rohit.kumar@gmail.com", "password123");
+        Patient p8 = new Patient("P-1008", "Deepika Mehta", "deepika.mehta@gmail.com", "password123");
+        Patient p9 = new Patient("P-1009", "Kiran Joshi", "kiran.joshi@gmail.com", "password123");
+        Patient p10 = new Patient("P-1010", "Suresh Iyer", "suresh.iyer@gmail.com", "password123");
+        Patient p11 = new Patient("P-1011", "Meera Pillai", "meera.pillai@gmail.com", "password123");
+        Patient p12 = new Patient("P-1012", "Aakash Gupta", "aakash.gupta@gmail.com", "password123");
+        Patient p13 = new Patient("P-1013", "Divya Krishnan", "divya.k@gmail.com", "password123");
+        Patient p14 = new Patient("P-1014", "Sandeep Rao", "sandeep.rao@gmail.com", "password123");
+        Patient p15 = new Patient("P-1015", "Lakshmi Desai", "lakshmi.desai@gmail.com", "password123");
         
-        PatientDAO.addPatient(p1);
-        PatientDAO.addPatient(p2);
-        PatientDAO.addPatient(p3);
+        PatientDAO.addPatient(p1); PatientDAO.addPatient(p2); PatientDAO.addPatient(p3);
+        PatientDAO.addPatient(p4); PatientDAO.addPatient(p5); PatientDAO.addPatient(p6);
+        PatientDAO.addPatient(p7); PatientDAO.addPatient(p8); PatientDAO.addPatient(p9);
+        PatientDAO.addPatient(p10); PatientDAO.addPatient(p11); PatientDAO.addPatient(p12);
+        PatientDAO.addPatient(p13); PatientDAO.addPatient(p14); PatientDAO.addPatient(p15);
 
         // 4. Seed Doctors across multiple specialization categories
 
@@ -92,17 +106,28 @@ public class DataSeeder {
         DoctorDAO.addDoctor(d16); DoctorDAO.addDoctor(d17); DoctorDAO.addDoctor(d18);
         DoctorDAO.addDoctor(d19); DoctorDAO.addDoctor(d20);
 
-        // 5. Seed Test Appointments
-        java.time.LocalDate tomorrow = java.time.LocalDate.now().plusDays(1);
-        java.time.LocalDate today = java.time.LocalDate.now();
-
-        Appointment a1 = new Appointment(0, "P-1001", "Emma Watson", "D-202", "Dr. Stephen Strange", tomorrow.toString(), "10:30 AM", "Severe Migraine", "SCHEDULED");
-        Appointment a2 = new Appointment(0, "P-1002", "Robert Downey", "D-201", "Dr. Gregory House", today.toString(), "09:00 AM", "Unexplained joint pain", "SCHEDULED");
-        Appointment a3 = new Appointment(0, "P-1003", "Chris Evans", "D-203", "Dr. Shaun Murphy", tomorrow.toString(), "02:00 PM", "Pre-op checkup", "SCHEDULED");
-
-        AppointmentDAO.addAppointment(a1);
-        AppointmentDAO.addAppointment(a2);
-        AppointmentDAO.addAppointment(a3);
+        // 5. Seed 100 Appointments (5 per doctor)
+        Doctor[] doctors = {d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14, d15, d16, d17, d18, d19, d20};
+        Patient[] patients = {p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15};
+        String[] symptoms = {"Fever", "Cough", "Headache", "Body Ache", "Joint Pain", "Migraine", "Dizziness", "Fatigue", "Nausea", "Skin Rash"};
+        String[] times = {"09:00 AM", "10:30 AM", "11:00 AM", "02:00 PM", "04:30 PM"};
+        
+        int aptId = 1;
+        for (Doctor doc : doctors) {
+            for (int i = 0; i < 5; i++) {
+                Patient pat = patients[(aptId - 1) % patients.length];
+                String date = java.time.LocalDate.now().plusDays((aptId % 10) + 1).toString();
+                String time = times[i % times.length];
+                String symptom = symptoms[aptId % symptoms.length];
+                String status = (aptId % 3 == 0) ? "COMPLETED" : "SCHEDULED";
+                
+                Appointment apt = new Appointment(0, pat.getPatientId(), pat.getName(), 
+                    doc.getDoctorId(), doc.getName(), date, time, symptom, status);
+                apt.setAppointmentId("APT-" + String.format("%03d", aptId));
+                AppointmentDAO.addAppointment(apt);
+                aptId++;
+            }
+        }
 
         System.out.println("Database seeding completed with realistic test variables.");
     }
